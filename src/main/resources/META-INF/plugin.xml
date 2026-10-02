@@ -13,8 +13,7 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        Enter short description for your plugin here.<br>
-        <em>most HTML tags may be used</em>
+        ReasonableVulkan Plugin integrates with ReasonableVulkan Engine to open asset files directly in the IDE when clicked in the Asset Manager.
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -26,7 +25,9 @@
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="MyToolWindow" factoryClass="com.example.MyToolWindowFactory"
+        <postStartupActivity implementation="com.example.ReasonableVulkanStartupActivity"/>
+        <applicationService serviceImplementation="com.example.ReasonableVulkanService"/>
+        <toolWindow id="ReasonableVulkan" factoryClass="com.example.MyToolWindowFactory"
                     icon="AllIcons.Toolwindows.ToolWindowPalette"/>
     </extensions>
 
