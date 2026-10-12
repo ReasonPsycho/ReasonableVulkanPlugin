@@ -13,7 +13,7 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        ReasonableVulkan Plugin integrates with ReasonableVulkan Engine to open asset files directly in the IDE when clicked in the Asset Manager.
+        ReasonableVulkan Plugin integrates with ReasonableVulkan Engine to open asset files directly in the IDE and control engine play/pause/stop lifecycle from the IDE.
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -21,6 +21,47 @@
     <depends>com.intellij.modules.platform</depends>
 
     <resource-bundle>messages.MyMessageBundle</resource-bundle>
+
+    <applicationListeners>
+        <listener class="com.example.ReasonableVulkanExecutionListener"
+                  topic="com.intellij.execution.ExecutionListener"/>
+    </applicationListeners>
+
+    <actions>
+        <group id="ReasonableVulkan.ToolbarGroup" text="ReasonableVulkan Engine Controls" description="ReasonableVulkan Play, Pause and Stop controls" popup="false">
+            <add-to-group group-id="MainToolbarRight" anchor="first"/>
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <separator/>
+            <action id="ReasonableVulkan.Play" class="com.example.ReasonableVulkanPlayAction"
+                    text="Play Engine" description="Start or resume play mode in ReasonableVulkan"
+                    icon="AllIcons.Actions.Execute">
+                <keyboard-shortcut keymap="$default" first-keystroke="control alt P"/>
+            </action>
+            <action id="ReasonableVulkan.Pause" class="com.example.ReasonableVulkanPauseAction"
+                    text="Pause Engine" description="Pause play mode in ReasonableVulkan"
+                    icon="AllIcons.Actions.Pause">
+                <keyboard-shortcut keymap="$default" first-keystroke="control alt shift P"/>
+            </action>
+            <action id="ReasonableVulkan.Stop" class="com.example.ReasonableVulkanStopAction"
+                    text="Stop Engine" description="Stop play mode in ReasonableVulkan"
+                    icon="AllIcons.Actions.Suspend">
+                <keyboard-shortcut keymap="$default" first-keystroke="control alt S"/>
+            </action>
+            <separator/>
+        </group>
+
+        <group id="ReasonableVulkan.ActionsGroup" text="ReasonableVulkan" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <add-to-group group-id="RunMenu" anchor="last"/>
+            <reference ref="ReasonableVulkan.Play"/>
+            <reference ref="ReasonableVulkan.Pause"/>
+            <reference ref="ReasonableVulkan.Stop"/>
+            <action id="ReasonableVulkan.TogglePlay" class="com.example.ReasonableVulkanTogglePlayAction"
+                    text="Toggle Play Engine" description="Toggle play/stop in ReasonableVulkan">
+                <keyboard-shortcut keymap="$default" first-keystroke="control shift P"/>
+            </action>
+        </group>
+    </actions>
 
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
