@@ -232,36 +232,39 @@ class ReasonableVulkanService @JvmOverloads constructor(initialPort: Int = DEFAU
 
     private fun writeSignalFile(filename: String, content: String) {
         try {
-            // Write to system temp directory
+            // Write to system temp directory (under /plugin folder)
             val tmpDir = System.getProperty("java.io.tmpdir")
             if (tmpDir != null) {
-                val tmpFile = File(tmpDir, filename)
+                val tmpPluginDir = File(tmpDir, "plugin").apply { mkdirs() }
+                val tmpFile = File(tmpPluginDir, filename)
                 Files.writeString(tmpFile.toPath(), content, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)
                 if (!filename.startsWith(".")) {
-                    val dotTmpFile = File(tmpDir, ".$filename")
+                    val dotTmpFile = File(tmpPluginDir, ".$filename")
                     Files.writeString(dotTmpFile.toPath(), content, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)
                 }
             }
 
-            // Write to open project directories
+            // Write to open project directories (under /plugin folder)
             val openProjects = ProjectManager.getInstance().openProjects.filter { !it.isDisposed }
             for (proj in openProjects) {
                 val basePath = proj.basePath
                 if (basePath != null) {
-                    val projFile = File(basePath, filename)
+                    val projPluginDir = File(basePath, "plugin").apply { mkdirs() }
+                    val projFile = File(projPluginDir, filename)
                     Files.writeString(projFile.toPath(), content, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)
                     if (!filename.startsWith(".")) {
-                        val dotProjFile = File(basePath, ".$filename")
+                        val dotProjFile = File(projPluginDir, ".$filename")
                         Files.writeString(dotProjFile.toPath(), content, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)
                     }
                 }
             }
 
-            // Write to current working directory
-            val cwdFile = File(".", filename)
+            // Write to current working directory (under /plugin folder)
+            val cwdPluginDir = File("plugin").apply { mkdirs() }
+            val cwdFile = File(cwdPluginDir, filename)
             Files.writeString(cwdFile.toPath(), content, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)
             if (!filename.startsWith(".")) {
-                val dotCwdFile = File(".", ".$filename")
+                val dotCwdFile = File(cwdPluginDir, ".$filename")
                 Files.writeString(dotCwdFile.toPath(), content, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)
             }
         } catch (_: Exception) {}

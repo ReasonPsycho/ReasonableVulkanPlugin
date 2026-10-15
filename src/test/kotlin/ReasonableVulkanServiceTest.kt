@@ -188,8 +188,8 @@ class ReasonableVulkanServiceTest {
     @Test
     fun testSignalFilesWrittenOnCommand() {
         val tmpDir = System.getProperty("java.io.tmpdir")
-        val controlFile = java.io.File(tmpDir, "rv_control")
-        val controlSignalFile = java.io.File(tmpDir, "rv_control.signal")
+        val controlFile = java.io.File(tmpDir, "plugin/rv_control")
+        val controlSignalFile = java.io.File(tmpDir, "plugin/rv_control.signal")
 
         service.stop()
         assertTrue(controlFile.exists())
